@@ -34,4 +34,6 @@
     <string name="settings">Перейти на экран настроек</string>
     <string name="deadline_semantics">Срок выполнения: %s</string>
     <string name="no_deadline_set">Срок выполнения не установлен</string>
+    <string name="address">Адрес</string>
+    <string name="choose_address">Выберите адрес</string>
 </resources>

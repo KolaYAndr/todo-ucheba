@@ -14,5 +14,6 @@ data class TodoDetailUiState(
     val deadline: LocalDateTime? = null,
     val modifiedAt: LocalDateTime? = null,
     val isDone: Boolean,
+    val address: String = "",
     val errorCode: Int? = null
 )

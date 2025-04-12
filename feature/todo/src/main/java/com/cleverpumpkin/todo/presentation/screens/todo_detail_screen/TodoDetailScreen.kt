@@ -1,8 +1,5 @@
 package com.cleverpumpkin.todo.presentation.screens.todo_detail_screen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -40,6 +37,7 @@ import com.cleverpumpkin.todo.domain.todo_model.Importance
 import com.cleverpumpkin.todo.presentation.composable_elements.DeleteButton
 import com.cleverpumpkin.todo.presentation.composable_elements.InputField
 import com.cleverpumpkin.todo.presentation.composable_elements.RefreshBlock
+import com.cleverpumpkin.todo.presentation.screens.todo_detail_screen.composables.AddressBlock
 import com.cleverpumpkin.todo.presentation.screens.todo_detail_screen.composables.DeadlineBlock
 import com.cleverpumpkin.todo.presentation.screens.todo_detail_screen.composables.ImportanceBlock
 import com.cleverpumpkin.todo.presentation.screens.todo_detail_screen.composables.ImportanceBottomSheet
@@ -49,6 +47,7 @@ import com.cleverpumpkin.todo.presentation.screens.todo_detail_screen.composable
 @Composable
 fun TodoDetailScreen(
     state: State<TodoDetailUiState>,
+    address: String,
     onSave: () -> Unit,
     onNavBack: () -> Unit,
     onSelectImportance: (Importance) -> Unit,
@@ -56,6 +55,7 @@ fun TodoDetailScreen(
     onTextChange: (String) -> Unit,
     onDelete: () -> Unit,
     onRefresh: () -> Unit,
+    onNavToMap: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiState = state.value
@@ -98,8 +98,8 @@ fun TodoDetailScreen(
                         importanceText = importance,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
                             .clickable { showDropdown = true }
+                            .padding(16.dp)
                             .background(TodoAppTheme.colorScheme.backPrimary)
                     )
 
@@ -107,11 +107,7 @@ fun TodoDetailScreen(
                         skipPartiallyExpanded = true
                     )
 
-                    this@Column.AnimatedVisibility(
-                        visible = showDropdown,
-                        enter = expandVertically(expandFrom = Alignment.Top),
-                        exit = shrinkVertically(shrinkTowards = Alignment.Top)
-                    ) {
+                    if (showDropdown){
                         ImportanceBottomSheet(
                             onSelectImportance = { onSelectImportance(it) },
                             sheetState = sheetState,
@@ -133,11 +129,7 @@ fun TodoDetailScreen(
                     if (uiState.deadline != null) pickedDate.value =
                         formatter.format(uiState.deadline)
 
-                    AnimatedVisibility(
-                        visible = showDatePicker,
-                        enter = expandVertically(expandFrom = Alignment.Top),
-                        exit = shrinkVertically(shrinkTowards = Alignment.Top)
-                    ) {
+                    if (showDatePicker) {
                         DatePickerDialog(
                             onDismissRequest = {
                                 showDatePicker = false
@@ -181,6 +173,19 @@ fun TodoDetailScreen(
                             if (!it) onSelectDeadline(null)
                         },
                         deadlineText = pickedDate.value,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
+
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = TodoAppTheme.colorScheme.supportSeparator
+                    )
+
+                    AddressBlock(
+                        onClick = { onNavToMap() },
+                        addressText = address,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)

@@ -3,6 +3,8 @@ package com.cleverpumpkin.todoapp.presentation.navigation
 import android.view.ContextThemeWrapper
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -26,6 +28,7 @@ import com.cleverpumpkin.core.presentation.navigation.NavArgs
 import com.cleverpumpkin.core.presentation.navigation.NavRoutes
 import com.cleverpumpkin.settings.presentation.SettingsScreen
 import com.cleverpumpkin.settings.presentation.SettingsScreenViewModel
+import com.cleverpumpkin.todo.presentation.screens.map_screen.MapScreen
 import com.cleverpumpkin.todo.presentation.screens.todo_detail_screen.TodoDetailScreen
 import com.cleverpumpkin.todo.presentation.screens.todo_detail_screen.TodoDetailViewModel
 import com.cleverpumpkin.todo.presentation.screens.todo_list_screen.TodoListScreen
@@ -36,29 +39,17 @@ import com.yandex.authsdk.YandexAuthLoginOptions
 import com.yandex.authsdk.YandexAuthOptions
 import com.yandex.authsdk.YandexAuthSdk
 
-private const val TRANSITION_ANIMATION_DURATION = 500
+private const val TRANSITION_ANIMATION_DURATION = 300
 
 @Composable
 fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = NavRoutes.AUTH_SCREEN,
+        startDestination = NavRoutes.TODO_LIST_SCREEN,
         enterTransition = {
             slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.Start,
-                tween(TRANSITION_ANIMATION_DURATION)
-            )
-        },
-        exitTransition = {
-            slideOutOfContainer(
-                AnimatedContentTransitionScope.SlideDirection.Start,
-                tween(TRANSITION_ANIMATION_DURATION)
-            )
-        },
-        popEnterTransition = {
-            slideIntoContainer(
-                AnimatedContentTransitionScope.SlideDirection.End,
                 tween(TRANSITION_ANIMATION_DURATION)
             )
         },
@@ -67,8 +58,9 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 AnimatedContentTransitionScope.SlideDirection.End,
                 tween(TRANSITION_ANIMATION_DURATION)
             )
-        }
-
+        },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None }
     ) {
         composable(route = NavRoutes.AUTH_SCREEN) {
             val authViewModel = hiltViewModel<AuthViewModel>()
@@ -117,6 +109,8 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
             val state = todoDetailViewModel.uiState.collectAsStateWithLifecycle()
             val id = it.arguments?.getString(NavArgs.TODO_ID) ?: NavArgs.CREATE_TODO
             todoDetailViewModel.findItem(id)
+            val address = it.savedStateHandle.get<String>("selected_address")
+
             TodoDetailScreen(
                 state = state,
                 onSave = {
@@ -132,6 +126,8 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 onTextChange = { text -> todoDetailViewModel.changeText(text) },
                 onSelectDeadline = { deadline -> todoDetailViewModel.selectDeadline(deadline) },
                 onRefresh = { todoDetailViewModel.refresh() },
+                onNavToMap = { navController.navigate(NavRoutes.MAP_SCREEN) },
+                address = address.orEmpty(),
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -159,6 +155,17 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 onNavigation = { navController.navigateUp() },
                 modifier = Modifier.fillMaxSize(),
                 themeString = themeString.value
+            )
+        }
+
+        composable(route = NavRoutes.MAP_SCREEN) {
+            MapScreen(
+                onNavBack = { navController.navigateUp() },
+                onSave = { coordinates ->
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("selected_address", coordinates)
+                }
             )
         }
     }

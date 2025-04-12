@@ -8,28 +8,22 @@ import androidx.room.PrimaryKey
 data class TodoEntity(
     @PrimaryKey(autoGenerate = false)
     val id: String,
-
     @ColumnInfo("description")
     val description: String,
-
     @ColumnInfo("importance")
     val importance: String,
-
     @ColumnInfo("is_done")
     val isDone: Boolean,
-
     @ColumnInfo("is_deleted")
     val isDeleted:Boolean,
-
     @ColumnInfo("created_at")
     val createdAt: Long,
-
     @ColumnInfo("modified_at")
     val modifiedAt: Long,
-
     @ColumnInfo("deadline")
     val deadline: Long?,
-
     @ColumnInfo("last_updated_by")
-    val lastUpdatedBy: String
+    val lastUpdatedBy: String,
+    @ColumnInfo("address")
+    val address: String = ""
 )

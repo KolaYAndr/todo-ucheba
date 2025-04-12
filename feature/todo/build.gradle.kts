@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.cleverpumpkin.todo"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26
@@ -61,4 +61,6 @@ dependencies {
     ksp(libs.dagger.hilt.compiler)
     implementation(libs.hilt.work)
     ksp(libs.hilt.compiler)
+
+    implementation(libs.map.kit)
 }

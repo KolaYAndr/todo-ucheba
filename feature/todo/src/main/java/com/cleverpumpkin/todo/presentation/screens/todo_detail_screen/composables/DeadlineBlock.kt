@@ -35,12 +35,13 @@ fun DeadlineBlock(
         id = R.string.no_deadline_set
     )
     Row(
-        modifier = modifier
+        modifier = Modifier
             .clearAndSetSemantics {
                 contentDescription = semanticsString
                 role = Role.Switch
             }
-            .clickable { onSwitch(!isDeadlineSet) },
+            .clickable { onSwitch(!isDeadlineSet) }
+            .then(modifier),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

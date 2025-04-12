@@ -34,4 +34,6 @@
     <string name="settings">Go to settings screen</string>
     <string name="deadline_semantics">Deadline: %s</string>
     <string name="no_deadline_set">Deadline is not set</string>
+    <string name="address">Address</string>
+    <string name="choose_address">Choose address</string>
 </resources>

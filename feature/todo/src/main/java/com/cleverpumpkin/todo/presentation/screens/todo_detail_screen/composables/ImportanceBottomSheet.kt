@@ -43,7 +43,7 @@ fun ImportanceBottomSheet(
         shape = RectangleShape,
         dragHandle = null,
         scrimColor = TodoAppTheme.colorScheme.supportSeparator,
-        windowInsets = WindowInsets(0, 0, 0, 0)
+        contentWindowInsets = { WindowInsets(0, 0, 0, 0) }
     ) {
         Column(
             modifier = Modifier

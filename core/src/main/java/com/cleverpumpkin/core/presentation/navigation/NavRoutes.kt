@@ -6,4 +6,5 @@ object NavRoutes {
     const val AUTH_SCREEN = "auth_screen"
     const val SETTINGS_SCREEN = "settings_screen"
     const val ABOUT_SCREEN = "about_screen"
+    const val MAP_SCREEN = "map_screen" //
 }
